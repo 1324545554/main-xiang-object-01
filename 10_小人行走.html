@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<style type="text/css">
+		canvas{
+			border:1px solid #333;
+		}
+	</style>
+</head>
+<body>
+	<canvas id="mycanvas" width="1000" height="400"></canvas>
+	<script type="text/javascript">
+		var mycanvas = document.getElementById("mycanvas");
+		var ctx = mycanvas.getContext("2d");
+
+		var img = new Image();
+		img.src = "images/m.png";
+		img.onload = function(){
+			start();
+		}
+
+		//开始游戏
+		function start(){
+			var step = 0;
+			var frame = 0;
+			var x = 0;
+			setInterval(function(){
+				frame++;	//帧编号
+
+				//清屏
+				ctx.clearRect(0,0,mycanvas.width,mycanvas.height);
+				//绘制角色
+				frame % 3 == 0 && step++;		//每3帧走一步
+				x = x + 2 ;						//每3帧移动2像素
+				if(step > 7) step = 0;
+
+				ctx.drawImage(img,256 * step,256*2,256,256,x,0,256,256);
+			},20);
+		}
+	</script>
+</body>
+</html>

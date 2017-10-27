@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<style type="text/css">
+		canvas{
+			border:1px solid #333;
+		}
+	</style>
+</head>
+<body>
+	<canvas id="mycanvas" width="600" height="400"></canvas>
+	<script type="text/javascript">
+		var mycanvas = document.getElementById("mycanvas");
+		var ctx = mycanvas.getContext("2d");
+
+		//Ball类，构造函数
+		function Ball(x,y,r,color){
+			this.x = x;
+			this.y = y;
+			this.r = r;
+			this.color = color;
+
+			this.dx = Math.random() * 8 - 4;
+			this.dy = Math.random() * 8 - 4;
+
+			//将自己放入小球数组
+			ballarr.push(this);
+		}
+		//更新
+		Ball.prototype.update = function(){
+			this.x += this.dx;
+			this.y += this.dy;
+			this.r --;
+			if(this.r < 0){
+				//数组中删除自己
+				for(var i = 0 ; i < ballarr.length ; i++){
+					if(ballarr[i] == this){
+						ballarr.splice(i , 1);
+					}
+				}
+			}
+		}
+		//渲染
+		Ball.prototype.render = function(){
+			ctx.beginPath();
+			ctx.arc(this.x , this.y , this.r , 0 , Math.PI * 2 , true);
+			ctx.closePath();
+			ctx.fillStyle = this.color;
+			ctx.fill();
+		}
+
+		//小球数组
+		var ballarr = [];
+
+		//主定时器，不管页面上有多少元素运动，一定只有一个定时器
+		var frame = 0;					//帧编号
+		setInterval(function(){
+			//清屏
+			ctx.clearRect(0,0,mycanvas.width,mycanvas.height);
+
+			frame++;					//帧编号加1
+			ctx.fillText(frame,10,20);	//显示帧编号
+
+			//更新、渲染所有小球
+			for(var i = 0 ; i < ballarr.length ; i++){
+				//更新小球
+				ballarr[i] && ballarr[i].update();
+				//绘制小球
+				ballarr[i] && ballarr[i].render();
+			};
+		},20);
+
+		//鼠标监听
+		mycanvas.onmousemove = function(event){
+			var x = event.clientX;
+			var y = event.clientY;
+
+			new Ball(x,y,30,"green");
+		}
+	</script>
+</body>
+</html>
